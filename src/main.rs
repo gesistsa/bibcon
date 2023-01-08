@@ -8,7 +8,7 @@ use std::fs;
 fn extract_citekeys(text: &str) -> HashSet<&str>{
     lazy_static! {
         static ref HASHTAG_REGEX : Regex = Regex::new(
-                r"(?P<ini>|[\[,; -])@(?P<key>[[[:alnum:]]_\-:]+)"
+                r"(?P<ini>^|[\[,; -])@(?P<key>[[[:alnum:]]_\-:]+)"
             ).unwrap();
     }
     HASHTAG_REGEX.captures_iter(text).map(|c| c.name("key").unwrap().as_str()).collect()
