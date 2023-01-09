@@ -6,6 +6,17 @@ This is a fast (and functioning) reimplementation of [condensebib](https://githu
 
 Please pay attention that this software is called *bibcon*, not *Bitcoin*.
 
+# install
+
+Please note that this software is still super experimental
+
+```bash
+## install cargo from here: https://doc.rust-lang.org/cargo/getting-started/installation.html
+cargo install --git https://github.com/GESIS-Methods-Hub/bibcon 
+```
+
+Binary distribution will only be provided after this software is stable.
+
 # usage
 
 `weat.qmd` contains 5 unique citations, whereas `weat.bib` contains 6 entries. The following generates BibTeX of only 5 entries.
