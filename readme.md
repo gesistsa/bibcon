@@ -28,5 +28,5 @@ bibcon tests/weat.qmd -b tests/weat.bib
 `r1.rmd` and `r2.rmd` contains 4 unique citations, whereas `main.bib` contains 12 entries.
 
 ```bash
-bibcon -b tests/main/bib tests/r1.rmd tests/r2.rmd
+bibcon -b tests/main.bib tests/r1.rmd tests/r2.rmd
 ```
