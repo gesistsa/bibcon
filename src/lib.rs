@@ -27,12 +27,21 @@ fn extract_bibtex(keys: &HashSet<&str>, bib: &Bibliography) -> Bibliography {
     condensed_bib
 }
 
-pub fn bibcon(md_path: &str, bib_path: &str) {
-    let text = fs::read_to_string(md_path)
-	.expect("Should have been able to read the file");
+pub fn condense (md_paths: Vec<&str>, bib_path: &str) -> Bibliography {
+    let mut text = String::from("");
+    for path in md_paths {
+	let temp_text = fs::read_to_string(path)
+	    .expect("Should have been able to read the file");
+	text.push_str(&temp_text);
+	text.push_str("\n");
+    }
     let keys = extract_citekeys(&text);
     let bib = read_bibtex(bib_path);
-    let cbib = extract_bibtex(&keys, &bib);
+    extract_bibtex(&keys, &bib)
+}
+
+pub fn bibcon(md_paths: Vec<&str>, bib_path: &str) {
+    let cbib = condense(md_paths, bib_path);
     println!("{}", cbib.to_bibtex_string());
 }
 
@@ -77,5 +86,11 @@ mod tests {
 	let cbib = extract_bibtex(&keys, &bib);
 	assert_eq!(bib.len(), 6);
 	assert_eq!(cbib.len(), 5);
+    }
+    #[test]
+    fn ut_condense() {
+	let paths = vec!["tests/r1.rmd", "tests/r2.rmd"];
+	let cbib = condense(paths, "tests/main.bib");
+	assert_eq!(cbib.len(), 4);	
     }
 }
