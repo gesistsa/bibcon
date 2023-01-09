@@ -11,5 +11,11 @@ Please pay attention that this software is called *bibcon*, not *Bitcoin*.
 `weat.qmd` contains 5 unique citations, whereas `weat.bib` contains 6 entries. The following generates BibTeX of only 5 entries.
 
 ```bash
-bibcon tests/weat.qmd tests/weat.bib
+bibcon tests/weat.qmd -b tests/weat.bib
+```
+
+`r1.rmd` and `r2.rmd` contains 4 unique citations, whereas `main.bib` contains 12 entries.
+
+```bash
+bibcon -b tests/main/bib tests/r1.rmd tests/r2.rmd
 ```
