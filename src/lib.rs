@@ -31,7 +31,15 @@ fn read_bibtex(path: &str) -> Bibliography {
 fn extract_bibtex(keys: &Vec<&str>, bib: &Bibliography) -> Bibliography {
     let mut condensed_bib = Bibliography::new();
     for key in keys {
-	condensed_bib.insert(Clone::clone(bib.get(key).expect("key not found!")));
+	let tempbib = bib.get(&key); // Option<&Entry>
+	match tempbib {
+	    Some(entry) => {
+		condensed_bib.insert(Clone::clone(entry));
+	    },
+	    None => {
+		eprint!("Citekey: {} not found. Ignored.\n", &key);
+	    }
+	}
     };
     condensed_bib
 }
@@ -104,6 +112,18 @@ mod tests {
 	let cbib = extract_bibtex(&v, &bib);
 	assert_eq!(bib.len(), 6);
 	assert_eq!(cbib.len(), 5);
+    }
+    #[test]
+    fn ut_extract_bibtex2() {
+	// won't panic when some cite keys are not found
+	let text = fs::read_to_string("tests/r1.rmd")
+	    .expect("Should have been able to read the file");
+	let keys = extract_citekeys(&text);
+	let bib = read_bibtex("tests/weat.bib");
+	let v: Vec<_> = keys.into_iter().collect();
+	let cbib = extract_bibtex(&v, &bib);
+	assert_eq!(bib.len(), 6);
+	assert_eq!(cbib.len(), 0);
     }
     #[test]
     fn ut_condense() {
