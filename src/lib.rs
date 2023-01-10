@@ -19,7 +19,7 @@ fn read_bibtex(path: &str) -> Bibliography {
     Bibliography::parse(&content).expect("Unable to parse the main BibTeX file.")
 }
 
-fn extract_bibtex(keys: &HashSet<&str>, bib: &Bibliography) -> Bibliography {
+fn extract_bibtex(keys: &Vec<&str>, bib: &Bibliography) -> Bibliography {
     let mut condensed_bib = Bibliography::new();
     for key in keys {
 	condensed_bib.insert(Clone::clone(bib.get(key).expect("key not found!")));
@@ -36,8 +36,10 @@ pub fn condense (md_paths: Vec<&str>, bib_path: &str) -> Bibliography {
 	text.push_str("\n");
     }
     let keys = extract_citekeys(&text);
+    let mut v: Vec<_> = keys.into_iter().collect();
+    v.sort();
     let bib = read_bibtex(bib_path);
-    extract_bibtex(&keys, &bib)
+    extract_bibtex(&v, &bib)
 }
 
 pub fn bibcon(md_paths: Vec<&str>, bib_path: &str) {
@@ -83,7 +85,8 @@ mod tests {
 	    .expect("Should have been able to read the file");
 	let keys = extract_citekeys(&text);
 	let bib = read_bibtex("tests/weat.bib");
-	let cbib = extract_bibtex(&keys, &bib);
+	let v: Vec<_> = keys.into_iter().collect();
+	let cbib = extract_bibtex(&v, &bib);
 	assert_eq!(bib.len(), 6);
 	assert_eq!(cbib.len(), 5);
     }
