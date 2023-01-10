@@ -2,6 +2,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashSet;
 use std::fs;
+use std::process;
 
 use biblatex::Bibliography;
 
@@ -15,8 +16,16 @@ pub fn extract_citekeys(text: &str) -> HashSet<&str>{
 }
 
 fn read_bibtex(path: &str) -> Bibliography {
-    let content = fs::read_to_string(&path).expect("Should have been able to read the file");
-    Bibliography::parse(&content).expect("Unable to parse the main BibTeX file.")
+    let bib_content = fs::read_to_string(&path);
+    match bib_content {
+	Ok(content) => {
+	    Bibliography::parse(&content).expect("Unable to parse the main BibTeX file.")
+	},
+	Err(_err) => {
+	    eprint!("Cannot read BibTeX file: {}.\n", &path);
+	    process::exit(1);
+	}
+    }
 }
 
 fn extract_bibtex(keys: &Vec<&str>, bib: &Bibliography) -> Bibliography {
@@ -37,7 +46,7 @@ pub fn condense (md_paths: Vec<&str>, bib_path: &str) -> Bibliography {
 		text.push_str("\n");
 	    },
 	    Err(_error) => {
-		eprint!("Cannot read {}, ignored.", path);
+		eprint!("Cannot read {}, ignored.\n", path);
 	    }
 	};
     }
