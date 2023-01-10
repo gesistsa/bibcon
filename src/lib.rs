@@ -30,10 +30,16 @@ fn extract_bibtex(keys: &Vec<&str>, bib: &Bibliography) -> Bibliography {
 pub fn condense (md_paths: Vec<&str>, bib_path: &str) -> Bibliography {
     let mut text = String::from("");
     for path in md_paths {
-	let temp_text = fs::read_to_string(path)
-	    .expect("Should have been able to read the file");
-	text.push_str(&temp_text);
-	text.push_str("\n");
+	let temp_text = fs::read_to_string(path);
+	match temp_text {
+	    Ok(content) => {
+		text.push_str(&content);
+		text.push_str("\n");
+	    },
+	    Err(_error) => {
+		eprint!("Cannot read {}, ignored.", path);
+	    }
+	};
     }
     let keys = extract_citekeys(&text);
     let mut v: Vec<_> = keys.into_iter().collect();
@@ -94,6 +100,20 @@ mod tests {
     fn ut_condense() {
 	let paths = vec!["tests/r1.rmd", "tests/r2.rmd"];
 	let cbib = condense(paths, "tests/main.bib");
-	assert_eq!(cbib.len(), 4);	
+	assert_eq!(cbib.len(), 4);
+    }
+    #[test]
+    fn ut_condense2() {
+	// with a non-exist file; ignore it
+	let paths = vec!["tests/r1.rmd", "tests/r2.rmd", "tests/r3.rmd"];
+	let cbib = condense(paths, "tests/main.bib");
+	assert_eq!(cbib.len(), 4);
+    }
+    #[test]
+    fn ut_condense3() {
+	// return nothing if all files don't exist
+	let paths = vec!["tests/r4.rmd", "tests/r3.rmd"];
+	let cbib = condense(paths, "tests/main.bib");
+	assert_eq!(cbib.len(), 0);	
     }
 }
