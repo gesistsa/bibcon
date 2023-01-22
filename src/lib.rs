@@ -65,9 +65,16 @@ pub fn condense (md_paths: Vec<&str>, bib_path: &str) -> Bibliography {
     extract_bibtex(&v, &bib)
 }
 
-pub fn bibcon(md_paths: Vec<&str>, bib_path: &str) {
+pub fn bibcon(md_paths: Vec<&str>, bib_path: &str, out_filename: Option<&str>) {
     let cbib = condense(md_paths, bib_path);
-    println!("{}", cbib.to_bibtex_string());
+    match out_filename {
+	Some(out_path) => {
+	    fs::write(out_path, cbib.to_bibtex_string()).expect("Unable to write file")
+	}, 
+	None => {
+	    println!("{}", cbib.to_bibtex_string())
+	},
+    }
 }
 
 #[cfg(test)]
