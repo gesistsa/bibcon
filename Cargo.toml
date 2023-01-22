@@ -11,3 +11,7 @@ lazy_static = "1"
 regex = "1"
 biblatex = "0.6"
 clap = "2"
+
+[profile.release]
+strip = true
+opt-level = 1
