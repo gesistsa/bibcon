@@ -12,7 +12,7 @@ Please note that this software is still super experimental
 
 ```bash
 ## install cargo from here: https://doc.rust-lang.org/cargo/getting-started/installation.html
-cargo install --git https://github.com/GESIS-Methods-Hub/bibcon 
+cargo install --git https://github.com/gesistsa/bibcon 
 ```
 
 Binary distribution will only be provided after this software is stable.
