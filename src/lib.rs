@@ -9,7 +9,7 @@ use biblatex::Bibliography;
 pub fn extract_citekeys(text: &str) -> HashSet<&str>{
     lazy_static! {
         static ref HASHTAG_REGEX : Regex = Regex::new(
-                r"(?P<ini>^|[\[,; -])@(?P<key>[[[:alnum:]]_\-:]+)"
+                r"(?P<ini>^|[\[\n,; -])@(?P<key>[[[:alnum:]]_\-:]+)"
             ).unwrap();
     }
     HASHTAG_REGEX.captures_iter(text).map(|c| c.name("key").unwrap().as_str()).collect()
@@ -147,9 +147,23 @@ mod tests {
     }
     #[test]
     fn ut_condense3() {
-	// return nothing if all files don't exist
-	let paths = vec!["tests/r4.rmd", "tests/r3.rmd"];
+	// Can capture citekey after a newline #7
+	let paths = vec!["tests/r1.rmd"];
 	let cbib = condense(paths, "tests/main.bib");
-	assert_eq!(cbib.len(), 0);	
+	assert_eq!(cbib.len(), 3);
+    }
+    #[test]
+    fn ut_condense4() {
+	// Can capture citekey at the beginning of a file #7
+	let paths = vec!["tests/r3.rmd"];
+	let cbib = condense(paths, "tests/main.bib");
+	assert_eq!(cbib.len(), 1);
+    }
+    #[test]
+    fn ut_condense5() {
+	// return nothing if all files don't exist
+	let paths = vec!["tests/r4.rmd", "tests/r5.rmd"];
+	let cbib = condense(paths, "tests/main.bib");
+	assert_eq!(cbib.len(), 0);
     }
 }
