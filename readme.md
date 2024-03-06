@@ -15,8 +15,6 @@ Please note that this software is still super experimental
 cargo install --git https://github.com/gesistsa/bibcon 
 ```
 
-Binary distribution will only be provided after this software is stable.
-
 # usage
 
 `weat.qmd` contains 5 unique citations, whereas `weat.bib` contains 6 entries. The following generates BibTeX of only 5 entries.
