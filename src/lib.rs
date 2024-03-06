@@ -15,11 +15,23 @@ pub fn extract_citekeys(text: &str) -> HashSet<&str>{
     HASHTAG_REGEX.captures_iter(text).map(|c| c.name("key").unwrap().as_str()).collect()
 }
 
+fn parse_bibtex(content: &str, path: &str) -> Bibliography {
+    let bib = Bibliography::parse(content);
+    match bib {
+	Ok(bib) => bib,
+	Err(error) => {
+	    eprint!("Cannot read BibTeX file {}\nReason: {}.\n", path, error);
+	    process::exit(1);
+	}
+    }
+}
+
 fn read_bibtex(path: &str) -> Bibliography {
     let bib_content = fs::read_to_string(&path);
     match bib_content {
 	Ok(content) => {
-	    Bibliography::parse(&content).expect("Unable to parse the main BibTeX file.")
+	    // Bibliography::parse(&content).expect("Unable to parse the main BibTeX file.")
+	    parse_bibtex(&content, &path)
 	},
 	Err(_err) => {
 	    eprint!("Cannot read BibTeX file: {}.\n", &path);
