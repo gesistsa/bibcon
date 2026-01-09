@@ -12,7 +12,7 @@ Please note that this software is still super experimental
 
 ```bash
 ## install cargo from here: https://doc.rust-lang.org/cargo/getting-started/installation.html
-cargo install --git https://github.com/gesistsa/bibcon 
+cargo install --git https://codeberg.org/chainsawriot/bibcon
 ```
 
 # usage
